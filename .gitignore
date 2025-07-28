@@ -1,0 +1,67 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Node/Vite/React typical .gitignore
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+coverage/
+*.tsbuildinfo
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Mac
+__MACOSX/
+
+# VS Code
+.history/
+
+# Local data
+*.sqlite
+*.db
+
+# Misc
+*.tgz
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
