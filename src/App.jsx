@@ -3,8 +3,8 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { getRandomIndex, loadProgress, saveProgress, loadAttempts, saveAttempts } from './utils';
 import { fetchAndParseCSV } from './csvLoader';
 
-// const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
-const CSV_FILE = '/Test3.csv';
+const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
+// const CSV_FILE = '/Test3.csv';
 
 export default function App() {
   const [verbs, setVerbs] = useState([]);
@@ -14,7 +14,10 @@ export default function App() {
   const [progress, setProgress] = useState(loadProgress());
   const [attempts, setAttempts] = useState(loadAttempts()); // { [idx]: correctCount }
   const [csvError, setCsvError] = useState(null);
-  const [mode, setMode] = useState('both'); // 'prep', 'case', 'both'
+  const [mode, setMode] = useState(() => {
+    const savedMode = localStorage.getItem('mode');
+    return (savedMode && ['prep', 'case', 'both'].includes(savedMode)) ? savedMode : 'both';
+  }); // 'prep', 'case', 'both'
 
   // Helper to get a unique key for each verb (verb+preposition+example)
   function getVerbKey(verbObj) {
@@ -70,6 +73,12 @@ export default function App() {
     });
     saveAttempts(attemptsToSave);
   }, [progress, attempts, verbs]);
+
+  useEffect(() => {
+    if (['prep', 'case', 'both'].includes(mode)) {
+      localStorage.setItem('mode', mode);
+    }
+  }, [mode]);
 
   useHotkeys('enter', () => {
     if (showAnswer) {
