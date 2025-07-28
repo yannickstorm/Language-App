@@ -24,6 +24,7 @@ export default function App() {
     const saved = localStorage.getItem('level');
     return saved === '2' ? 2 : 1;
   });
+  const [showSettings, setShowSettings] = useState(false);
   const inputRef = useRef(null);
 
   // Helper to get a unique key for each verb (verb+preposition+example)
@@ -229,26 +230,66 @@ export default function App() {
   const current = verbs[currentIdx];
 
   return (
-    <div style={{ maxWidth: 500, margin: '2rem auto', padding: '2rem', border: '1px solid #ccc', borderRadius: 8 }}>
-      <h2>German Verb Trainer</h2>
-      <div style={{ marginBottom: '1rem' }}>
-        <b>Level:</b>
-        <button onClick={() => setLevel(1)} style={{ marginLeft: 8, background: level === 1 ? '#388e3c' : '#eee', color: level === 1 ? '#fff' : '#333', border: '1px solid #388e3c', borderRadius: '4px', padding: '4px 12px', cursor: 'pointer' }}>1 (Choices)</button>
-        <button onClick={() => setLevel(2)} style={{ marginLeft: 8, background: level === 2 ? '#388e3c' : '#eee', color: level === 2 ? '#fff' : '#333', border: '1px solid #388e3c', borderRadius: '4px', padding: '4px 12px', cursor: 'pointer' }}>2 (Text Input)</button>
+    <div style={{
+      width: '100vw',
+      margin: 0,
+      padding: '1rem',
+      borderRadius: 24,
+      boxSizing: 'border-box',
+      background: 'linear-gradient(135deg, #e3f0ff 0%, #f9fbe7 100%)',
+      fontSize: '1.1em',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      justifyContent: 'flex-end',
+      position: 'relative',
+      boxShadow: '0 8px 32px rgba(44, 62, 80, 0.12)',
+    }}>
+      <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+        <button
+          aria-label="Settings"
+          onClick={() => setShowSettings((s) => !s)}
+          style={{
+            background: '#eee',
+            border: 'none',
+            borderRadius: '50%',
+            width: 48,
+            height: 48,
+            fontSize: '1.5em',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+          }}
+        >
+          {/* Modern SVG gear icon */}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3.2" stroke="#1976d2" strokeWidth="2"/>
+            <path d="M19.4 13c.04-.32.06-.65.06-.99s-.02-.67-.06-.99l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.03 7.03 0 0 0-1.71-.99l-.38-2.65A.5.5 0 0 0 13 2h-4a.5.5 0 0 0-.5.42l-.38 2.65c-.63.25-1.22.58-1.77.99l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65c-.04.32-.06.65-.06.99s.02.67.06.99l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.14.24.44.32.68.22l2.49-1c.55.41 1.14.74 1.77.99l.38 2.65c.05.28.27.48.5.48h4c.23 0 .45-.2.5-.48l.38-2.65c.63-.25 1.22-.58 1.77-.99l2.49 1c.24.1.54.02.68-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65z" stroke="#1976d2" strokeWidth="1.5" fill="none"/>
+          </svg>
+        </button>
       </div>
-      <div style={{ marginBottom: '1rem' }}>
-        <b>Mode:</b>
-        <button onClick={() => { setMode('prep'); localStorage.setItem('mode', 'prep'); }} style={{ marginLeft: 8, background: mode === 'prep' ? '#1976d2' : '#eee', color: mode === 'prep' ? '#fff' : '#333', border: '1px solid #1976d2', borderRadius: '4px', padding: '4px 12px', cursor: 'pointer' }}>Preposition Only</button>
-        <button onClick={() => { setMode('case'); localStorage.setItem('mode', 'case'); }} style={{ marginLeft: 8, background: mode === 'case' ? '#1976d2' : '#eee', color: mode === 'case' ? '#fff' : '#333', border: '1px solid #1976d2', borderRadius: '4px', padding: '4px 12px', cursor: 'pointer' }}>Case Only</button>
-        <button onClick={() => { setMode('both'); localStorage.setItem('mode', 'both'); }} style={{ marginLeft: 8, background: mode === 'both' ? '#1976d2' : '#eee', color: mode === 'both' ? '#fff' : '#333', border: '1px solid #1976d2', borderRadius: '4px', padding: '4px 12px', cursor: 'pointer' }}>Both</button>
+      <h2 style={{ fontSize: '1.7em', textAlign: 'center', marginBottom: '1rem', marginTop: 0, color: '#1976d2', letterSpacing: '1px', textShadow: '0 2px 8px #e3eafc' }}>German Verb Trainer</h2>
+      {/* Centered verb display with emphasis and animation */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 0, width: '100%' }}>
+        <div style={{ textAlign: 'center', width: '100%' }}>
+          <span style={{ display: 'block', width: '100%', fontSize: '2.6em', fontWeight: 'bold', color: '#1976d2', letterSpacing: '1px', textShadow: '0 4px 16px #b3c6ff', textAlign: 'center', transition: 'transform 0.3s', transform: showAnswer ? 'scale(1.08)' : 'scale(1)' }}>
+            {current['Verb']}
+          </span>
+          <div style={{ color: '#888', fontStyle: 'italic', fontSize: '1.2em', marginTop: 8 }}>
+            ({current['Translation']})
+          </div>
+        </div>
       </div>
-      <div><b>Verb:</b> {current['Verb']} <span style={{ color: '#888', fontStyle: 'italic', marginLeft: 8 }}>({current['Translation']})</span></div>
+      <div style={{ flex: 1 }}></div>
       <div style={{ margin: '1rem 0' }}>
         {mode !== 'case' && (
-          <label>
-            Preposition:
+          <label style={{ display: 'block', marginBottom: 12 }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Preposition:</span>
             {level === 1 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginLeft: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 8 }}>
                 {prepositionChoices.map((prep) => {
                   let btnColor = '#eee';
                   let btnTextColor = '#333';
@@ -284,12 +325,12 @@ export default function App() {
                         color: btnTextColor,
                         border,
                         borderRadius: '4px',
-                        padding: '10px 0',
+                        padding: '16px 0',
                         cursor: 'pointer',
                         outline: 'none',
                         fontWeight,
                         width: '100%',
-                        fontSize: '1.1em',
+                        fontSize: '1.2em',
                         transition: 'background 0.2s, border 0.2s',
                       }}
                     >
@@ -305,16 +346,16 @@ export default function App() {
                 onChange={(e) => setGuess({ ...guess, prep: e.target.value })}
                 onKeyDown={handleInputKeyDown}
                 disabled={showAnswer}
-                style={{ marginLeft: 8 }}
+                style={{ marginTop: 8, width: '100%', fontSize: '1.2em', padding: '12px', borderRadius: 4, border: '1px solid #bdbdbd' }}
               />
             )}
           </label>
         )}
         {mode !== 'prep' && (
-          <label style={{ marginLeft: 16 }}>
-            Case:
-            <div style={{ display: 'inline-block', marginLeft: 8 }}>
-              {["Akk", "Dat"].map((caseOpt) => {
+          <label style={{ display: 'block', marginBottom: 12 }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Case:</span>
+            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+              {['Akk', 'Dat'].map((caseOpt) => {
                 let btnColor = '#eee';
                 let btnTextColor = '#333';
                 let fontWeight = 'normal';
@@ -348,13 +389,13 @@ export default function App() {
                       background: btnColor,
                       color: btnTextColor,
                       border,
-                      borderRadius: caseOpt === 'Akk' ? '4px 0 0 4px' : '0 4px 4px 0',
-                      padding: '6px 16px',
+                      borderRadius: '4px',
+                      padding: '16px 0',
                       cursor: 'pointer',
                       outline: 'none',
                       fontWeight,
-                      marginLeft: caseOpt === 'Dat' ? '-1px' : undefined,
-                      fontSize: '1.1em',
+                      width: '100%',
+                      fontSize: '1.2em',
                       transition: 'background 0.2s, border 0.2s',
                     }}
                   >
@@ -367,10 +408,10 @@ export default function App() {
         )}
       </div>
       {!showAnswer && (
-        <>
-          <button onClick={handleGuess}>Guess</button>
-          <button onClick={giveUp} style={{ marginLeft: 8 }}>Give Up</button>
-        </>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+          <button onClick={handleGuess} style={{ width: '100%', padding: '16px 0', fontSize: '1.2em', borderRadius: 4, border: '1px solid #1976d2', background: '#1976d2', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Guess</button>
+          <button onClick={giveUp} style={{ width: '100%', padding: '16px 0', fontSize: '1.2em', borderRadius: 4, border: '1px solid #b71c1c', background: '#fff', color: '#b71c1c', fontWeight: 'bold', cursor: 'pointer' }}>Give Up</button>
+        </div>
       )}
       {showAnswer && level === 1 && mode !== 'case' && (
         <div style={{ marginTop: '1rem' }}></div>
@@ -402,7 +443,11 @@ export default function App() {
         </>
       )}
       <button onClick={nextVerb} style={{ marginTop: 8 }}>Next</button>
-      <div style={{ marginTop: '2rem', fontSize: '1.1em' }}>
+      {/* Progress bar for score */}
+      <div style={{ width: '100%', margin: '1.5rem 0 0 0', height: 12, background: '#e3eafc', borderRadius: 6, overflow: 'hidden', boxShadow: '0 2px 8px #e3eafc' }}>
+        <div style={{ width: `${(progress.learned.length / verbs.length) * 100}%`, height: '100%', background: 'linear-gradient(90deg, #1976d2 0%, #388e3c 100%)', borderRadius: 6, transition: 'width 0.4s' }}></div>
+      </div>
+      <div style={{ marginTop: '0.5rem', fontSize: '1.1em', textAlign: 'center', color: '#1976d2', fontWeight: 'bold' }}>
         <b>Score:</b> {progress.score} | <b>Learned:</b> {progress.learned.length}/{verbs.length}
       </div>
     </div>
