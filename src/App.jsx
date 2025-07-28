@@ -271,6 +271,87 @@ export default function App() {
           </svg>
         </button>
       </div>
+      {/* Settings modal/card */}
+      {showSettings && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(44,62,80,0.10)',
+          zIndex: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+          onClick={() => setShowSettings(false)}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: 16,
+              boxShadow: '0 4px 24px rgba(44,62,80,0.12)',
+              padding: '2rem 1.5rem 1.5rem 1.5rem',
+              minWidth: 300,
+              maxWidth: '90vw',
+              position: 'relative',
+              border: '1px solid #e3eafc',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowSettings(false)}
+              style={{
+                position: 'absolute',
+                top: 14,
+                right: 14,
+                background: '#e3eafc',
+                border: 'none',
+                borderRadius: '50%',
+                width: 32,
+                height: 32,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#1976d2',
+                boxShadow: '0 1px 4px #e3eafc',
+                transition: 'background 0.2s',
+                padding: 0,
+              }}
+              aria-label="Close settings"
+            >
+              {/* Modern SVG X icon, styled like gear icon */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9.5" stroke="#1976d2" strokeWidth="1.5" fill="none" />
+                <path d="M8 8l8 8M16 8l-8 8" stroke="#1976d2" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+            <h3 style={{ marginTop: 0, color: '#1976d2', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2em', letterSpacing: '1px' }}>Settings</h3>
+            <div style={{ margin: '1.2rem 0', width: '100%' }}>
+              <div style={{ marginBottom: '1rem', width: '100%' }}>
+                <label style={{ fontWeight: 'bold', marginRight: 8, color: '#1976d2', fontSize: '1em' }}>Mode:</label>
+                <select value={mode} onChange={e => setMode(e.target.value)} style={{ fontSize: '1em', padding: '8px 12px', borderRadius: 6, border: '1px solid #bdbdbd', background: '#f7fbff', color: '#1976d2', width: '100%', marginTop: 6 }}>
+                  <option value="both">Preposition + Case</option>
+                  <option value="prep">Preposition only</option>
+                  <option value="case">Case only</option>
+                </select>
+              </div>
+              <div style={{ width: '100%' }}>
+                <label style={{ fontWeight: 'bold', marginRight: 8, color: '#1976d2', fontSize: '1em' }}>Level:</label>
+                <select value={level} onChange={e => setLevel(Number(e.target.value))} style={{ fontSize: '1em', padding: '8px 12px', borderRadius: 6, border: '1px solid #bdbdbd', background: '#f7fbff', color: '#1976d2', width: '100%', marginTop: 6 }}>
+                  <option value={1}>Multiple Choice</option>
+                  <option value={2}>Text Input</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <h2 style={{ fontSize: '1.7em', textAlign: 'center', marginBottom: '1rem', marginTop: 0, color: '#1976d2', letterSpacing: '1px', textShadow: '0 2px 8px #e3eafc' }}>German Verb Trainer</h2>
       {/* Centered verb display with emphasis and animation */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 0, width: '100%' }}>
@@ -283,7 +364,45 @@ export default function App() {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1 }}></div>
+      <div
+        style={{ flex: 1, position: 'relative' }}
+        onClick={(e) => {
+          // Prevent nextVerb if clicking on the settings button or its parent
+          if (showAnswer) {
+            let el = e.target;
+            while (el) {
+              if (el.getAttribute && el.getAttribute('aria-label') === 'Settings') return;
+              el = el.parentElement;
+            }
+            nextVerb();
+          }
+        }}
+      >
+        {/* Show overlay prompt when answer is displayed */}
+        {showAnswer && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              background: 'rgba(25, 118, 210, 0.08)',
+              color: '#1976d2',
+              textAlign: 'center',
+              fontSize: '1.2em',
+              fontWeight: 'bold',
+              padding: '18px 0',
+              borderRadius: '0 0 24px 24px',
+              cursor: 'pointer',
+              zIndex: 2,
+              boxShadow: '0 -2px 8px #e3eafc',
+              userSelect: 'none',
+            }}
+          >
+            Tap to continue
+          </div>
+        )}
+      </div>
       <div style={{ margin: '1rem 0' }}>
         {mode !== 'case' && (
           <label style={{ display: 'block', marginBottom: 12 }}>
@@ -410,7 +529,6 @@ export default function App() {
       {!showAnswer && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
           <button onClick={handleGuess} style={{ width: '100%', padding: '16px 0', fontSize: '1.2em', borderRadius: 4, border: '1px solid #1976d2', background: '#1976d2', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Guess</button>
-          <button onClick={giveUp} style={{ width: '100%', padding: '16px 0', fontSize: '1.2em', borderRadius: 4, border: '1px solid #b71c1c', background: '#fff', color: '#b71c1c', fontWeight: 'bold', cursor: 'pointer' }}>Give Up</button>
         </div>
       )}
       {showAnswer && level === 1 && mode !== 'case' && (
@@ -437,12 +555,11 @@ export default function App() {
       )}
       {/* Only show Example and Translation when answer is displayed */}
       {showAnswer && (
-        <>
+        <div onClick={nextVerb} style={{ cursor: 'pointer' }}>
           <div><b>Example:</b> {current['Exemple']}</div>
           <div><b>Translation:</b> {current['ExampleTranslation']}</div>
-        </>
+        </div>
       )}
-      <button onClick={nextVerb} style={{ marginTop: 8 }}>Next</button>
       {/* Progress bar for score */}
       <div style={{ width: '100%', margin: '1.5rem 0 0 0', height: 12, background: '#e3eafc', borderRadius: 6, overflow: 'hidden', boxShadow: '0 2px 8px #e3eafc' }}>
         <div style={{ width: `${(progress.learned.length / verbs.length) * 100}%`, height: '100%', background: 'linear-gradient(90deg, #1976d2 0%, #388e3c 100%)', borderRadius: 6, transition: 'width 0.4s' }}></div>
