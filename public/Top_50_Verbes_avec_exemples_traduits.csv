@@ -1,50 +1,50 @@
-Verb,Preposition,Case,Translation,Exemple,ExampleTranslation
-sich ärgern,über,Akk,se fâcher à propos de,Ich ärgere mich über den Verkehr.,Je me fâche à cause de la circulation.
-sich aufregen,über,Akk,s’énerver au sujet de,Sie regt sich über die Verspätung auf.,Elle s'énerve à propos du retard.
-antworten,auf,Akk,répondre à,Er antwortet auf die Frage.,Il répond à la question.
-achten,auf,Akk,faire attention à,Achte auf den Hund!,Fais attention au chien !
-anfangen,mit,Dat,commencer par,Wir fangen mit dem Projekt an.,Nous commençons par le projet.
-aufhören,mit,Dat,arrêter de,Ich höre mit dem Rauchen auf.,J’arrête de fumer.
-aufpassen,auf,Akk,surveiller,Pass auf die Kinder auf!,Surveille les enfants !
-bestehen,aus,Dat,se composer de,Die Gruppe besteht aus fünf Personen.,Le groupe se compose de cinq personnes.
-bestehen,auf,Dat,"tenir à, insister sur",Er besteht auf seiner Meinung.,Il insiste sur son opinion.
-sich beziehen,auf,Akk,se référer à,Ich beziehe mich auf Ihre E-Mail.,Je me réfère à votre e-mail.
-bitten,um,Akk,demander (qqch),Er bittet um Hilfe.,Il demande de l’aide.
-denken,an,Akk,penser à,Ich denke an dich.,Je pense à toi.
-diskutieren,über,Akk,discuter de,Wir diskutieren über das Problem.,Nous discutons du problème.
-sich entscheiden,für,Akk,se décider pour,Sie entscheidet sich für das rote Kleid.,Elle opte pour la robe rouge.
-sich entscheiden,gegen,Akk,se décider contre,Er entscheidet sich gegen das Angebot.,Il rejette l’offre.
-sich entschuldigen,für,Akk,s’excuser de,Ich entschuldige mich für meinen Fehler.,Je m'excuse pour mon erreur.
-sich entschuldigen,bei,Dat,s’excuser auprès de,Sie entschuldigt sich bei ihrem Chef.,Elle s'excuse auprès de son chef.
-sich erinnern,an,Akk,se souvenir de,Ich erinnere mich an den Urlaub.,Je me souviens des vacances.
-sich freuen,auf,Akk,se réjouir de (futur),Ich freue mich auf das Wochenende.,Je me réjouis du week-end.
-sich freuen,über,Akk,se réjouir de (présent/passé),Sie freut sich über das Geschenk.,Elle est contente du cadeau.
-gehören,zu,Dat,appartenir à,Das Buch gehört zu mir.,Ce livre m’appartient.
-glauben,an,Akk,croire en,Ich glaube an dich.,Je crois en toi.
-halten,für,Akk,considérer comme,Ich halte dich für intelligent.,Je te considère comme intelligent.
-hören,von,Dat,entendre parler de,Ich habe nichts von ihm gehört.,Je n’ai rien entendu de lui.
-kämpfen,für,Akk,se battre pour,Er kämpft für seine Rechte.,Il se bat pour ses droits.
-kämpfen,gegen,Akk,se battre contre,Sie kämpft gegen die Ungerechtigkeit.,Elle lutte contre l'injustice.
-klagen,über,Akk,se plaindre de,Ich klage über Kopfschmerzen.,Je me plains de maux de tête.
-kommen,zu,Dat,"arriver à, en venir à",Das führt zu einem Ergebnis.,Cela mène à un résultat.
-lachen,über,Akk,rire de,Wir lachen über den Witz.,Nous rions de la blague.
-leiden,an,Dat,souffrir de,Er leidet an einer Krankheit.,Il souffre d’une maladie.
-sich interessieren,für,Akk,s’intéresser à,Ich interessiere mich für Musik.,Je m'intéresse à la musique.
-sich kümmern,um,Akk,s’occuper de,Sie kümmert sich um die Gäste.,Elle s’occupe des invités.
-sich konzentrieren,auf,Akk,se concentrer sur,Ich konzentriere mich auf die Aufgabe.,Je me concentre sur la tâche.
-nachdenken,über,Akk,réfléchir à,Ich denke über das Problem nach.,Je réfléchis au problème.
-protestieren,gegen,Akk,protester contre,Wir protestieren gegen die Entscheidung.,Nous protestons contre la décision.
-sich sorgen,um,Akk,se préoccuper de,Er sorgt sich um seine Eltern.,Il s'inquiète pour ses parents.
-sprechen,mit,Dat,parler avec,Ich spreche mit dem Lehrer.,Je parle avec le professeur.
-sprechen,über,Akk,parler de,Wir sprechen über den Film.,Nous parlons du film.
-sprechen,von,Dat,parler de (mentionner),Er spricht von seiner Kindheit.,Il parle de son enfance.
-staunen,über,Akk,s’étonner de,Ich staune über deine Fähigkeiten.,Je suis étonné par tes compétences.
-sterben,an,Dat,mourir de,Er ist an Krebs gestorben.,Il est mort d’un cancer.
-teilnehmen,an,Dat,participer à,Ich nehme an der Konferenz teil.,Je participe à la conférence.
-träumen,von,Dat,rêver de,Ich träume von einem Haus am Meer.,Je rêve d’une maison au bord de la mer.
-sich unterhalten,mit,Dat,s’entretenir avec,Ich unterhalte mich mit meinem Freund.,Je discute avec mon ami.
-sich unterhalten,über,Akk,discuter de,Wir unterhalten uns über das Wetter.,Nous parlons de la météo.
-sich verabreden,mit,Dat,convenir d’un rendez-vous avec,Ich verabrede mich mit ihr.,J’ai rendez-vous avec elle.
-sich verlieben,in,Akk,tomber amoureux de,Sie hat sich in ihn verliebt.,Elle est tombée amoureuse de lui.
-sich wundern,über,Akk,s’étonner de,Ich wundere mich über seine Reaktion.,Je suis surpris par sa réaction.
-warten,auf,Akk,attendre sur,Ich warte auf meinen Freund.,J'attend sur mon amis.
+Verb,Preposition,Case,Translation,Exemple,ExampleTranslation,WrongPrepositions
+sich ärgern,über,Akk,se fâcher à propos de,Ich ärgere mich über den Verkehr.,Je me fâche à cause de la circulation.,"unter, mit, bei, auf, bis"
+sich aufregen,über,Akk,s’énerver au sujet de,Sie regt sich über die Verspätung auf.,Elle s'énerve à propos du retard.,"unter, an, von, ohne, vor"
+antworten,auf,Akk,répondre à,Er antwortet auf die Frage.,Il répond à la question.,"an, ohne, über, gegen, von"
+achten,auf,Akk,faire attention à,Achte auf den Hund!,Fais attention au chien !,"nach, ohne, für, an, vor"
+anfangen,mit,Dat,commencer par,Wir fangen mit dem Projekt an.,Nous commençons par le projet.,"nach, zu, an, zwischen, auf"
+aufhören,mit,Dat,arrêter de,Ich höre mit dem Rauchen auf.,J’arrête de fumer.,"über, zu, an, vor, gegen"
+aufpassen,auf,Akk,surveiller,Pass auf die Kinder auf!,Surveille les enfants !,"gegen, unter, von, bei, bis"
+bestehen,aus,Dat,se composer de,Die Gruppe besteht aus fünf Personen.,Le groupe se compose de cinq personnes.,"unter, vor, von, für, bei"
+bestehen,auf,Dat,"tenir à, insister sur",Er besteht auf seiner Meinung.,Il insiste sur son opinion.,"für, vor, zwischen, über, ohne"
+sich beziehen,auf,Akk,se référer à,Ich beziehe mich auf Ihre E-Mail.,Je me réfère à votre e-mail.,"vor, nach, von, über, ohne"
+bitten,um,Akk,demander (qqch),Er bittet um Hilfe.,Il demande de l’aide.,"gegen, unter, auf, über, mit"
+denken,an,Akk,penser à,Ich denke an dich.,Je pense à toi.,"nach, unter, vor, ohne, bei"
+diskutieren,über,Akk,discuter de,Wir diskutieren über das Problem.,Nous discutons du problème.,"ohne, zwischen, mit, an, zu"
+sich entscheiden,für,Akk,se décider pour,Sie entscheidet sich für das rote Kleid.,Elle opte pour la robe rouge.,"an, zwischen, bei, über, zu"
+sich entscheiden,gegen,Akk,se décider contre,Er entscheidet sich gegen das Angebot.,Il rejette l’offre.,"nach, über, zu, an, zwischen"
+sich entschuldigen,für,Akk,s’excuser de,Ich entschuldige mich für meinen Fehler.,Je m'excuse pour mon erreur.,"mit, vor, ohne, über, gegen"
+sich entschuldigen,bei,Dat,s’excuser auprès de,Sie entschuldigt sich bei ihrem Chef.,Elle s'excuse auprès de son chef.,"auf, ohne, nach, bis, zwischen"
+sich erinnern,an,Akk,se souvenir de,Ich erinnere mich an den Urlaub.,Je me souviens des vacances.,"bis, für, ohne, nach, zu"
+sich freuen,auf,Akk,se réjouir de (futur),Ich freue mich auf das Wochenende.,Je me réjouis du week-end.,"ohne, bis, über, gegen, vor"
+sich freuen,über,Akk,se réjouir de (présent/passé),Sie freut sich über das Geschenk.,Elle est contente du cadeau.,"bis, an, unter, mit, gegen"
+gehören,zu,Dat,appartenir à,Das Buch gehört zu mir.,Ce livre m’appartient.,"mit, für, vor, ohne, unter"
+glauben,an,Akk,croire en,Ich glaube an dich.,Je crois en toi.,"zu, über, unter, auf, ohne"
+halten,für,Akk,considérer comme,Ich halte dich für intelligent.,Je te considère comme intelligent.,"zu, an, bei, unter, ohne"
+hören,von,Dat,entendre parler de,Ich habe nichts von ihm gehört.,Je n’ai rien entendu de lui.,"auf, zwischen, mit, ohne, über"
+kämpfen,für,Akk,se battre pour,Er kämpft für seine Rechte.,Il se bat pour ses droits.,"zwischen, an, bis, unter, gegen"
+kämpfen,gegen,Akk,se battre contre,Sie kämpft gegen die Ungerechtigkeit.,Elle lutte contre l'injustice.,"vor, für, nach, zu, unter"
+klagen,über,Akk,se plaindre de,Ich klage über Kopfschmerzen.,Je me plains de maux de tête.,"gegen, an, bis, nach, zwischen"
+kommen,zu,Dat,"arriver à, en venir à",Das führt zu einem Ergebnis.,Cela mène à un résultat.,"bei, nach, über, an, von"
+lachen,über,Akk,rire de,Wir lachen über den Witz.,Nous rions de la blague.,"ohne, bis, vor, an, für"
+leiden,an,Dat,souffrir de,Er leidet an einer Krankheit.,Il souffre d’une maladie.,"bis, von, gegen, zwischen, vor"
+sich interessieren,für,Akk,s’intéresser à,Ich interessiere mich für Musik.,Je m'intéresse à la musique.,"mit, zu, von, bei, gegen"
+sich kümmern,um,Akk,s’occuper de,Sie kümmert sich um die Gäste.,Elle s’occupe des invités.,"mit, ohne, an, zu, für"
+sich konzentrieren,auf,Akk,se concentrer sur,Ich konzentriere mich auf die Aufgabe.,Je me concentre sur la tâche.,"an, mit, zu, zwischen, unter"
+nachdenken,über,Akk,réfléchir à,Ich denke über das Problem nach.,Je réfléchis au problème.,"ohne, bis, gegen, zwischen, von"
+protestieren,gegen,Akk,protester contre,Wir protestieren gegen die Entscheidung.,Nous protestons contre la décision.,"über, unter, an, von, bis"
+sich sorgen,um,Akk,se préoccuper de,Er sorgt sich um seine Eltern.,Il s'inquiète pour ses parents.,"bis, über, für, ohne, auf"
+sprechen,mit,Dat,parler avec,Ich spreche mit dem Lehrer.,Je parle avec le professeur.,"vor, von, über, bis, gegen"
+sprechen,über,Akk,parler de,Wir sprechen über den Film.,Nous parlons du film.,"bei, zu, auf, bis, für"
+sprechen,von,Dat,parler de (mentionner),Er spricht von seiner Kindheit.,Il parle de son enfance.,"für, zwischen, gegen, ohne, vor"
+staunen,über,Akk,s’étonner de,Ich staune über deine Fähigkeiten.,Je suis étonné par tes compétences.,"zwischen, bei, bis, vor, nach"
+sterben,an,Dat,mourir de,Er ist an Krebs gestorben.,Il est mort d’un cancer.,"von, zwischen, gegen, bis, für"
+teilnehmen,an,Dat,participer à,Ich nehme an der Konferenz teil.,Je participe à la conférence.,"auf, gegen, ohne, mit, über"
+träumen,von,Dat,rêver de,Ich träume von einem Haus am Meer.,Je rêve d’une maison au bord de la mer.,"für, an, zwischen, mit, nach"
+sich unterhalten,mit,Dat,s’entretenir avec,Ich unterhalte mich mit meinem Freund.,Je discute avec mon ami.,"über, unter, für, von, ohne"
+sich unterhalten,über,Akk,discuter de,Wir unterhalten uns über das Wetter.,Nous parlons de la météo.,"zu, vor, bis, an, für"
+sich verabreden,mit,Dat,convenir d’un rendez-vous avec,Ich verabrede mich mit ihr.,J’ai rendez-vous avec elle.,"gegen, über, ohne, zwischen, an"
+sich verlieben,in,Akk,tomber amoureux de,Sie hat sich in ihn verliebt.,Elle est tombée amoureuse de lui.,"vor, über, bis, an, gegen"
+sich wundern,über,Akk,s’étonner de,Ich wundere mich über seine Reaktion.,Je suis surpris par sa réaction.,"bei, zu, ohne, auf, an"
+warten,auf,Akk,attendre sur,Ich warte auf meinen Freund.,J'attend sur mon amis.,"gegen, an, vor, bis, von"
