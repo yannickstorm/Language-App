@@ -3,9 +3,8 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { getRandomIndex, loadProgress, saveProgress, loadAttempts, saveAttempts } from './utils';
 import { fetchAndParseCSV } from './csvLoader';
 
-// const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
-// const CSV_FILE = '/Top_50_Verbes_avec_Faux_Pr_positionen.csv';
-const CSV_FILE = '/Test3.csv';
+const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
+// const CSV_FILE = '/Test3.csv';
 
 export default function App() {
   const [verbs, setVerbs] = useState([]);

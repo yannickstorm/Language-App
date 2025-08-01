@@ -65,3 +65,4 @@ __MACOSX/
 *.njsproj
 *.sln
 *.sw?
+.vercel
