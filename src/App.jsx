@@ -7,6 +7,62 @@ import styles from './AppStyles';
 const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
 // const CSV_FILE = '/Test3.csv';
 
+const translations = {
+	en: {
+		settings: 'Settings',
+		mode: 'Mode',
+		level: 'Level',
+		language: 'Language',
+		modeBoth: 'Preposition + Case',
+		modePrep: 'Preposition only',
+		modeCase: 'Case only',
+		level1: 'Multiple Choice',
+		level2: 'Text Input',
+		appTitle: 'German Verb Trainer',
+		preposition: 'Preposition',
+		case: 'Case',
+		guess: 'Guess',
+		tapToContinue: 'Tap to continue',
+		example: 'Example',
+		translation: 'Translation',
+		score: 'Score',
+		learned: 'Learned',
+		allLearned: 'All verbs learned!',
+		restart: 'Restart',
+		loading: 'Loading...',
+		error: 'Error',
+	},
+	fr: {
+		settings: 'Paramètres',
+		mode: 'Mode',
+		level: 'Niveau',
+		language: 'Langue',
+		modeBoth: 'Préposition + Cas',
+		modePrep: 'Préposition seulement',
+		modeCase: 'Cas seulement',
+		level1: 'Choix multiple',
+		level2: 'Saisie texte',
+		appTitle: 'Entraîneur de verbes allemands',
+		preposition: 'Préposition',
+		case: 'Cas',
+		guess: 'Deviner',
+		tapToContinue: 'Appuyez pour continuer',
+		example: 'Exemple',
+		translation: 'Traduction',
+		score: 'Score',
+		learned: 'Appris',
+		allLearned: 'Tous les verbes sont appris !',
+		restart: 'Recommencer',
+		loading: 'Chargement...',
+		error: 'Erreur',
+	}
+};
+
+const supportedLanguages = [
+	{ code: 'en', label: 'English' },
+	{ code: 'fr', label: 'Français' }
+];
+
 export default function App() {
 	const [verbs, setVerbs] = useState([]);
 	const [currentIdx, setCurrentIdx] = useState(null);
@@ -25,6 +81,11 @@ export default function App() {
 		return saved === '2' ? 2 : 1;
 	});
 	const [showSettings, setShowSettings] = useState(false);
+	const [language, setLanguage] = useState(() => {
+		const savedLang = localStorage.getItem('language');
+		const found = supportedLanguages.find(l => l.code === savedLang);
+		return found ? found.code : supportedLanguages[0].code;
+	});
 	const inputRef = useRef(null);
 
 	// Helper to get a unique key for each verb (verb+preposition+example)
@@ -200,28 +261,46 @@ export default function App() {
 		}
 	}
 
+	useEffect(() => {
+		localStorage.setItem('language', language);
+	}, [language]);
+
+	function t(key) {
+		return translations[language][key] || key;
+	}
+
+	// Helper to get the correct translation for the verb
+	function getVerbTranslation(current) {
+		return current['Translation_' + language] || '';
+	}
+
+	// Helper to get the correct example translation
+	function getCurrentTranslation(current) {
+		return current['ExampleTranslation_' + language] || '';
+	}
+
 	if (csvError) {
 		return (
 			<div style={{ color: 'red', padding: '2rem', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2em' }}>
-				Error: {csvError}
+				{t('error')} {csvError}
 			</div>
 		);
 	}
-	if (!verbs.length || currentIdx === null) return <div>Loading...</div>;
+	if (!verbs.length || currentIdx === null) return <div>{t('loading')}</div>;
 	if (progress.learned.length === verbs.length) {
 		return (
 			<div style={{ maxWidth: 500, margin: '2rem auto', padding: '2rem', border: '1px solid #ccc', borderRadius: 8, textAlign: 'center' }}>
-				<h2>German Verb Trainer</h2>
+				<h2>{t('appTitle')}</h2>
 				<div style={{ fontSize: '1.2em', margin: '2rem 0' }}>
-					🎉 All verbs learned! 🎉<br />
-					<b>Score:</b> {progress.score} / {verbs.length}
+					🎉 {t('allLearned')} 🎉<br />
+					<b>{t('score')}:</b> {progress.score} / {verbs.length}
 				</div>
 				<button onClick={() => {
 					setProgress({ score: 0, learned: [] });
 					setAttempts({});
 					setCurrentIdx(getRandomIndex(verbs.length, []));
 				}}>
-					Restart
+					{t('restart')}
 				</button>
 			</div>
 		);
@@ -235,7 +314,7 @@ export default function App() {
 
 			<div style={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
 				<button
-					aria-label="Settings"
+					aria-label={t('settings')}
 					onClick={() => setShowSettings((s) => !s)}
 					style={styles.settingsButton}
 				>
@@ -255,7 +334,7 @@ export default function App() {
 						<button
 							onClick={() => setShowSettings(false)}
 							style={styles.closeButton}
-							aria-label="Close settings"
+							aria-label={t('close')}
 						>
 							{/* Modern SVG X icon, styled like gear icon */}
 							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -264,23 +343,32 @@ export default function App() {
 							</svg>
 						</button>
 
-						<h3 style={styles.settingsHeading}>Settings</h3>
+						<h3 style={styles.settingsHeading}>{t('settings')}</h3>
 
 						<div style={{ margin: '1.2rem 0', width: '100%' }}>
 							<div style={{ marginBottom: '1rem', width: '100%' }}>
-								<label style={styles.settingsLabel}>Mode:</label>
+								<label style={styles.settingsLabel}>{t('mode')}:</label>
 								<select value={mode} onChange={e => setMode(e.target.value)} style={styles.settingsSelect}>
-									<option value="both">Preposition + Case</option>
-									<option value="prep">Preposition only</option>
-									<option value="case">Case only</option>
+									<option value="both">{t('modeBoth')}</option>
+									<option value="prep">{t('modePrep')}</option>
+									<option value="case">{t('modeCase')}</option>
 								</select>
 							</div>
 
 							<div style={{ width: '100%' }}>
-								<label style={styles.settingsLabel}>Level:</label>
+								<label style={styles.settingsLabel}>{t('level')}:</label>
 								<select value={level} onChange={e => setLevel(Number(e.target.value))} style={styles.settingsSelect}>
-									<option value={1}>Multiple Choice</option>
-									<option value={2}>Text Input</option>
+									<option value={1}>{t('level1')}</option>
+									<option value={2}>{t('level2')}</option>
+								</select>
+							</div>
+
+							<div style={{ width: '100%', marginTop: '1rem' }}>
+								<label style={styles.settingsLabel}>{t('language')}:</label>
+								<select value={language} onChange={e => setLanguage(e.target.value)} style={styles.settingsSelect}>
+									{supportedLanguages.map(lang => (
+										<option key={lang.code} value={lang.code}>{lang.label}</option>
+									))}
 								</select>
 							</div>
 						</div>
@@ -289,7 +377,7 @@ export default function App() {
 				</div>
 			)}
 
-			<h2 style={styles.header}>German Verb Trainer</h2>
+			<h2 style={styles.header}>{t('appTitle')}</h2>
 
 			{/* Centered verb display with emphasis and animation */}
 			<div style={styles.verbDisplay}>
@@ -299,7 +387,7 @@ export default function App() {
 					</span>
 
 					<div style={styles.verbTranslation}>
-						({current['Translation']})
+						({getVerbTranslation(current)})
 					</div>
 				</div>
 			</div>
@@ -321,7 +409,7 @@ export default function App() {
 				{/* Show overlay prompt when answer is displayed */}
 				{showAnswer && (
 					<div style={styles.nextOverlay}>
-						Tap to continue
+						{t('tapToContinue')}
 					</div>
 				)}
 			</div>
@@ -329,7 +417,7 @@ export default function App() {
 			<div style={{ margin: '1rem 0' }}>
 				{mode !== 'case' && (
 					<label style={{ display: 'block', marginBottom: 12 }}>
-						<span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Preposition:</span>
+						<span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{t('preposition')}:</span>
 
 						{level === 1 ? (
 							<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 8 }}>
@@ -391,7 +479,7 @@ export default function App() {
 
 				{mode !== 'prep' && (
 					<label style={{ display: 'block', marginBottom: 12 }}>
-						<span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Case:</span>
+						<span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{t('case')}:</span>
 
 						<div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
 							{['Akk', 'Dat'].map((caseOpt) => {
@@ -443,7 +531,7 @@ export default function App() {
 
 			{!showAnswer && (
 				<div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
-					<button onClick={handleGuess} style={styles.guessButton}>Guess</button>
+					<button onClick={handleGuess} style={styles.guessButton}>{t('guess')}</button>
 				</div>
 			)}
 
@@ -454,7 +542,7 @@ export default function App() {
 			{showAnswer && level === 2 && mode !== 'case' && (
 				<div style={styles.feedbackContainer}>
 					<div>
-						<b>Preposition:</b>
+						<b>{t('preposition')}:</b>
 						<span style={{ ...styles.feedbackText, ...(guess.prep.trim().toLowerCase() === (current['Preposition']?.trim().toLowerCase() || '') ? styles.feedbackCorrect : styles.feedbackIncorrect) }}>
 							{guess.prep}
 						</span>
@@ -470,8 +558,8 @@ export default function App() {
 			{/* Only show Example and Translation when answer is displayed */}
 			{showAnswer && (
 				<div onClick={nextVerb} style={styles.exampleTranslation}>
-					<div><b>Example:</b> {current['Exemple']}</div>
-					<div><b>Translation:</b> {current['ExampleTranslation']}</div>
+					<div><b>{t('example')}:</b> {current['Exemple']}</div>
+					<div><b>{t('translation')}:</b> {getCurrentTranslation(current)}</div>
 				</div>
 			)}
 
@@ -481,7 +569,7 @@ export default function App() {
 			</div>
 
 			<div style={styles.scoreText}>
-				<b>Score:</b> {progress.score} | <b>Learned:</b> {progress.learned.length}/{verbs.length}
+				<b>{t('score')}:</b> {progress.score} | <b>{t('learned')}:</b> {progress.learned.length}/{verbs.length}
 			</div>
 
 		</div>
