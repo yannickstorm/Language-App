@@ -31,6 +31,7 @@ const translations = {
 		restart: 'Restart',
 		loading: 'Loading...',
 		error: 'Error',
+		close: 'Close',
 	},
 	fr: {
 		settings: 'Paramètres',
@@ -55,12 +56,39 @@ const translations = {
 		restart: 'Recommencer',
 		loading: 'Chargement...',
 		error: 'Erreur',
+		close: 'Fermer',
+	},
+	es: {
+		settings: 'Configuración',
+		mode: 'Modo',
+		level: 'Nivel',
+		language: 'Idioma',
+		modeBoth: 'Preposición + Caso',
+		modePrep: 'Solo preposición',
+		modeCase: 'Solo caso',
+		level1: 'Opción múltiple',
+		level2: 'Entrada de texto',
+		appTitle: 'Entrenador de verbos alemanes',
+		preposition: 'Preposición',
+		case: 'Caso',
+		guess: 'Adivinar',
+		tapToContinue: 'Toca para continuar',
+		example: 'Ejemplo',
+		translation: 'Traducción',
+		score: 'Puntuación',
+		learned: 'Aprendido',
+		allLearned: '¡Todos los verbos aprendidos!',
+		restart: 'Reiniciar',
+		loading: 'Cargando...',
+		error: 'Error',
+		close: 'Cerrar',
 	}
 };
 
 const supportedLanguages = [
 	{ code: 'en', label: 'English' },
-	{ code: 'fr', label: 'Français' }
+	{ code: 'fr', label: 'Français' },
+	{ code: 'es', label: 'Español' }
 ];
 
 export default function App() {
@@ -266,17 +294,40 @@ export default function App() {
 	}, [language]);
 
 	function t(key) {
-		return translations[language][key] || key;
+		if (translations[language]?.[key]) {
+			return translations[language][key];
+		} else {
+			console.warn(`Missing UI translation for key '${key}' in language '${language}'`);
+			return 'Missing translation';
+		}
 	}
 
 	// Helper to get the correct translation for the verb
 	function getVerbTranslation(current) {
-		return current['Translation_' + language] || '';
+		const value = current['Translation_' + language];
+		if (value) {
+			return value;
+		} else if (language !== 'en' && current['Translation_en']) {
+			console.warn(`Missing verb translation for language '${language}' in row, falling back to English:`, current);
+			return current['Translation_en'];
+		} else {
+			console.warn(`Missing verb translation for language '${language}' and no English fallback in row:`, current);
+			return 'No translation available';
+		}
 	}
 
 	// Helper to get the correct example translation
 	function getCurrentTranslation(current) {
-		return current['ExampleTranslation_' + language] || '';
+		const value = current['ExampleTranslation_' + language];
+		if (value) {
+			return value;
+		} else if (language !== 'en' && current['ExampleTranslation_en']) {
+			console.warn(`Missing example translation for language '${language}' in row, falling back to English:`, current);
+			return current['ExampleTranslation_en'];
+		} else {
+			console.warn(`Missing example translation for language '${language}' and no English fallback in row:`, current);
+			return 'No translation available';
+		}
 	}
 
 	if (csvError) {
