@@ -16,7 +16,7 @@ const styles = {
     alignItems: 'stretch',
     justifyContent: 'flex-end',
     position: 'relative',
-    boxShadow: '0 8px 32px rgba(44, 62, 80, 0.12)',
+    boxShadow: '0 8px px rgba(44, 62, 80, 0.12)',
   },
   settingsButton: {
     background: '#eee',
