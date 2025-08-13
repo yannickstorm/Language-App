@@ -27,6 +27,7 @@ export default function CaseAdjectiveTrainer({ language, onBack }) {
   const [guess, setGuess] = useState({ determinant: '', adj: '', decl: '', nounEnding: '' });
   const [showAnswer, setShowAnswer] = useState(false);
   const [csvError, setCsvError] = useState(null);
+  const [showGenusIdx, setShowGenusIdx] = useState(null); // Track which noun's genus tooltip is shown
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -93,8 +94,8 @@ export default function CaseAdjectiveTrainer({ language, onBack }) {
 
   const current = rows[currentIdx];
   // Present German sentence with custom placeholder for determinant, declension, and noun ending (genitive)
-  function getCustomForm(row, showAnswer, guess) {
-    const { Determinant, Adjektiv, Adjektivdeklination, Nomen, Kasus } = row;
+  function getCustomForm(row, showAnswer, guess, showGenus, onToggleGenus) {
+    const { Determinant, Adjektiv, Adjektivdeklination, Nomen, Kasus, Genus } = row;
     let detPlaceholder = '';
     let declPlaceholder = '__';
     let nounForm = Nomen;
@@ -104,18 +105,79 @@ export default function CaseAdjectiveTrainer({ language, onBack }) {
     else if (Determinant && Determinant.startsWith("ein")) detPlaceholder = "ein__";
     // Noun ending placeholder for genitive
     const isGenitive = Kasus && Kasus.toLowerCase() === 'genitiv';
-    if (isGenitive) {
-      if (!showAnswer) {
-        nounForm = Nomen.replace(/(es)?$/, '__');
-      } else {
-        // Show correct ending, highlighted in green
-        if (typeof Nomen === 'string' && Nomen.match(/es$/)) {
-          const base = Nomen.slice(0, -2);
-          nounForm = <>{base}<span style={{ color: '#388e3c', fontWeight: 'bold', background: '#c8e6c9', borderRadius: 4, padding: '0 4px', fontSize: '1.08em' }}>es</span></>;
-        } else {
-          nounForm = <>{Nomen}</>;
-        }
+    // Genus color coding (distinct from Kasus, no green, no similar hues)
+    const genusColors = {
+      'm': { bg: '#ffe082', color: '#6d4c00' },    // Orange, brown text
+      'f': { bg: '#80cbc4', color: '#004d40' },   // Teal, dark teal text
+      'n': { bg: '#f8bbd0', color: '#ad1457' }    // Pink, deep pink text
+    };
+    const genusKey = (row.Genus || '').trim().toLowerCase().charAt(0);
+    const genusStyle = genusColors[genusKey] || { bg: '#ececec', color: '#222' };
+    // Noun display with genus background color (not a badge), and click-to-show-genus
+    let nounDisplay = Nomen;
+    const genusLabels = { m: 'Maskulin', f: 'Feminin', n: 'Neutrum' };
+    const genusLabel = genusLabels[genusKey] || row.Genus || '';
+    if (Nomen) {
+      // For Genitiv, show the placeholder or green 'es' ending in the clickable span
+      let displayNoun = Nomen;
+      if (isGenitive && !showAnswer) {
+        displayNoun = Nomen.replace(/(es)?$/, '__');
+      } else if (isGenitive && showAnswer && typeof Nomen === 'string' && Nomen.match(/es$/)) {
+        const base = Nomen.slice(0, -2);
+        displayNoun = <>{base}<span style={{ color: '#388e3c', fontWeight: 'bold', background: '#c8e6c9', borderRadius: 4, padding: '0 4px', fontSize: '1.08em' }}>es</span></>;
       }
+      nounDisplay = (
+        <span style={{ position: 'relative', display: 'inline-block' }}>
+          <span
+            style={{
+              background: genusStyle.bg,
+              color: genusStyle.color,
+              borderRadius: 6,
+              padding: '2px 8px',
+              fontWeight: 'bold',
+              fontSize: '1.08em',
+              marginLeft: 2,
+              marginRight: 2,
+              letterSpacing: '0.5px',
+              boxShadow: '0 1px 2px #0001',
+              verticalAlign: 'middle',
+              cursor: 'pointer',
+              transition: 'box-shadow 0.2s',
+              border: showGenus ? '2px solid #3332' : 'none',
+              display: 'inline-block'
+            }}
+            title="Click to show Genus"
+            onClick={e => { e.stopPropagation(); onToggleGenus(); }}
+          >
+            {displayNoun}
+          </span>
+          {showGenus && genusLabel && (
+            <span style={{
+              position: 'absolute',
+              left: '50%',
+              top: '100%',
+              transform: 'translateX(-50%)',
+              background: '#fff',
+              color: genusStyle.color,
+              border: `1.5px solid ${genusStyle.bg}`,
+              borderRadius: 8,
+              padding: '4px 14px',
+              fontWeight: 'bold',
+              fontSize: '1em',
+              marginTop: 6,
+              boxShadow: '0 2px 8px #0002',
+              zIndex: 20,
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none'
+            }}>
+              {genusLabel}
+            </span>
+          )}
+        </span>
+      );
+    }
+    if (isGenitive) {
+      // nounDisplay is always clickable, nothing else to do
     }
     // Adjective declension
     let adjFull = null;
@@ -132,10 +194,16 @@ export default function CaseAdjectiveTrainer({ language, onBack }) {
       detSpan = detPlaceholder;
     }
     // Compose
-    return <>{detSpan ? <>{detSpan} </> : null}{adjFull} {nounForm}</>;
+    return <>{detSpan ? <>{detSpan} </> : null}{adjFull} {nounDisplay}</>;
   }
-  // Use getCustomForm for sentence rendering
-  const customForm = getCustomForm(current, showAnswer, guess);
+  // Use getCustomForm for sentence rendering, pass genus tooltip state/handler
+  const customForm = getCustomForm(
+    current,
+    showAnswer,
+    guess,
+    showGenusIdx === currentIdx,
+    () => setShowGenusIdx(showGenusIdx === currentIdx ? null : currentIdx)
+  );
   let germanSentence = current.Beispielsatz;
   if (germanSentence.includes('{FORM}')) {
     const parts = germanSentence.split('{FORM}');
@@ -174,9 +242,41 @@ export default function CaseAdjectiveTrainer({ language, onBack }) {
   return (
     <div style={{ ...styles.appContainer, position: 'relative' }}>
       {menuButton}
-      <h2 style={styles.header}>German Cases & Adjective Endings Trainer</h2>
+      <h2 style={styles.header}>Kasus und Deklination</h2>
       <div style={styles.verbDisplay}>
         <div style={{ textAlign: 'center', width: '100%' }}>
+          {/* Kasus badge with color coding */}
+          {current.Kasus && (
+            <span style={{
+              display: 'inline-block',
+              background: (() => {
+                switch ((current.Kasus || '').toLowerCase()) {
+                  case 'nominativ': return '#bbdefb'; // blue
+                  case 'akkusativ': return '#ffcdd2'; // red
+                  case 'dativ': return '#d1c4e9'; // purple
+                  case 'genitiv': return '#bcaaa4'; // brown
+                  default: return '#f5f5f5';
+                }
+              })(),
+              color: (() => {
+                switch ((current.Kasus || '').toLowerCase()) {
+                  case 'nominativ': return '#0d47a1';
+                  case 'akkusativ': return '#b71c1c';
+                  case 'dativ': return '#4527a0';
+                  case 'genitiv': return '#4e342e';
+                  default: return '#333';
+                }
+              })(),
+              borderRadius: 12,
+              padding: '2px 14px',
+              fontWeight: 'bold',
+              fontSize: '1.1em',
+              letterSpacing: '0.5px',
+              marginBottom: 4
+            }}>
+              {current.Kasus}
+            </span>
+          )}
           <span style={{ ...styles.verbText, fontSize: '2em', letterSpacing: '1px' }}>
             {germanSentence}
           </span>
