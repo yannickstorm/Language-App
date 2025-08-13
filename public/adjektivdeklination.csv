@@ -1,0 +1,33 @@
+Form,Determinant,Nomen,Adjektiv,Adjektivdeklination,Kasus,Genus,Beispielsatz,ExampleTranslation_en,ExampleTranslation_fr,ExampleTranslation_es
+der grosse Hund,der,Hund,gross,e,Nominativ,maskulin,{FORM} läuft im Park.,The big dog runs in the park.,Le grand chien court dans le parc.,El perro grande corre en el parque.
+den grossen Hund,den,Hund,gross,en,Akkusativ,maskulin,Ich sehe {FORM}.,I see the big dog.,Je vois le grand chien.,Veo al perro grande.
+dem grossen Hund,dem,Hund,gross,en,Dativ,maskulin,Ich gebe {FORM} einen Knochen.,I give a bone to the big dog.,Je donne un os au grand chien.,Le doy un hueso al perro grande.
+des grossen Hundes,des,Hundes,gross,en,Genitiv,maskulin,Die Hütte {FORM} ist sauber.,The hut of the big dog is clean.,La cabane du grand chien est propre.,La caseta del perro grande está limpia.
+die grosse Katze,die,Katze,gross,e,Nominativ,feminin,{FORM} schläft auf dem Sofa.,The big cat sleeps on the sofa.,La grande chatte dort sur le canapé.,La gata grande duerme en el sofá.
+die grosse Katze,die,Katze,gross,e,Akkusativ,feminin,Ich streichle {FORM}.,I pet the big cat.,Je caresse la grande chatte.,Acaricio a la gata grande.
+der grossen Katze,der,Katze,gross,en,Dativ,feminin,Ich helfe {FORM}.,I help the big cat.,J'aide la grande chatte.,Ayudo a la gata grande.
+der grossen Katze,der,Katze,gross,en,Genitiv,feminin,Das Spielzeug {FORM} ist neu.,The toy of the big cat is new.,Le jouet de la grande chatte est neuf.,El juguete de la gata grande es nuevo.
+das grosse Kind,das,Kind,gross,e,Nominativ,neutrum,{FORM} spielt im Garten.,The big child plays in the garden.,Le grand enfant joue dans le jardin.,El niño grande juega en el jardín.
+das grosse Kind,das,Kind,gross,e,Akkusativ,neutrum,Ich kenne {FORM}.,I know the big child.,Je connais le grand enfant.,Conozco al niño grande.
+dem grossen Kind,dem,Kind,gross,en,Dativ,neutrum,Ich gebe {FORM} ein Buch.,I give a book to the big child.,Je donne un livre au grand enfant.,Le doy un libro al niño grande.
+des grossen Kindes,des,Kindes,gross,en,Genitiv,neutrum,Der Ball {FORM} ist rot.,The ball of the big child is red.,La balle du grand enfant est rouge.,La pelota del niño grande es roja.
+die grossen Äpfel,die,Äpfel,gross,en,Nominativ,plural,{FORM} liegen im Korb.,The big apples lie in the basket.,Les grosses pommes sont dans le panier.,Las manzanas grandes están en la cesta.
+die grossen Äpfel,die,Äpfel,gross,en,Akkusativ,plural,Ich kaufe {FORM}.,I buy the big apples.,J'achète les grosses pommes.,Compro las manzanas grandes.
+den grossen Äpfeln,den,Äpfeln,gross,en,Dativ,plural,Ich gebe {FORM} Wasser.,I give water to the big apples.,Je donne de l'eau aux grosses pommes.,Les doy agua a las manzanas grandes.
+der grossen Äpfel,der,Äpfel,gross,en,Genitiv,plural,Der Geschmack {FORM} ist süss.,The taste of the big apples is sweet.,Le goût des grosses pommes est sucré.,El sabor de las manzanas grandes es dulce.
+ein grosser Hund,ein,Hund,gross,er,Nominativ,maskulin,{FORM} bellt laut.,A big dog barks loudly.,Un grand chien aboie fort.,Un perro grande ladra fuerte.
+einen grossen Hund,einen,Hund,gross,en,Akkusativ,maskulin,Ich sehe {FORM}.,I see a big dog.,Je vois un grand chien.,Veo a un perro grande.
+einem grossen Hund,einem,Hund,gross,en,Dativ,maskulin,Ich gebe {FORM} einen Knochen.,I give a bone to a big dog.,Je donne un os à un grand chien.,Le doy un hueso a un perro grande.
+eines grossen Hundes,eines,Hundes,gross,en,Genitiv,maskulin,Die Hütte {FORM} ist sauber.,The hut of a big dog is clean.,La cabane d'un grand chien est propre.,La caseta de un perro grande está limpia.
+eine grosse Katze,eine,Katze,gross,e,Nominativ,feminin,{FORM} schläft auf dem Sofa.,A big cat sleeps on the sofa.,Une grande chatte dort sur le canapé.,Una gata grande duerme en el sofá.
+eine grosse Katze,eine,Katze,gross,e,Akkusativ,feminin,Ich streichle {FORM}.,I pet a big cat.,Je caresse une grande chatte.,Acaricio a una gata grande.
+einer grossen Katze,einer,Katze,gross,en,Dativ,feminin,Ich helfe {FORM}.,I help a big cat.,J'aide une grande chatte.,Ayudo a una gata grande.
+einer grossen Katze,einer,Katze,gross,en,Genitiv,feminin,Das Spielzeug {FORM} ist neu.,The toy of a big cat is new.,Le jouet d'une grande chatte est neuf.,El juguete de una gata grande es nuevo.
+ein grosses Kind,ein,Kind,gross,es,Nominativ,neutrum,{FORM} spielt im Garten.,A big child plays in the garden.,Un grand enfant joue dans le jardin.,Un niño grande juega en el jardín.
+ein grosses Kind,ein,Kind,gross,es,Akkusativ,neutrum,Ich kenne {FORM}.,I know a big child.,Je connais un grand enfant.,Conozco a un niño grande.
+einem grossen Kind,einem,Kind,gross,en,Dativ,neutrum,Ich gebe {FORM} ein Buch.,I give a book to a big child.,Je donne un livre à un grand enfant.,Le doy un libro a un niño grande.
+eines grossen Kindes,eines,Kindes,gross,en,Genitiv,neutrum,Der Ball {FORM} ist rot.,The ball of a big child is red.,La balle d'un grand enfant est rouge.,La pelota de un niño grande es roja.
+grosse Äpfel,,Äpfel,gross,e,Nominativ,plural,{FORM} liegen im Korb.,Big apples lie in the basket.,Grosses pommes sont dans le panier.,Manzanas grandes están en la cesta.
+grosse Äpfel,,Äpfel,gross,e,Akkusativ,plural,Ich kaufe {FORM}.,I buy big apples.,J'achète des grosses pommes.,Compro manzanas grandes.
+grossen Äpfeln,,Äpfeln,gross,en,Dativ,plural,Ich gebe {FORM} Wasser.,I give water to big apples.,Je donne de l'eau à des grosses pommes.,Les doy agua a manzanas grandes.
+grosser Äpfel,,Äpfel,gross,er,Genitiv,plural,Der Geschmack {FORM} ist süss.,The taste of big apples is sweet.,Le goût de grosses pommes est sucré.,El sabor de manzanas grandes es dulce.

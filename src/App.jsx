@@ -7,8 +7,8 @@ const translations = {
   en: {
     appTitle: 'Language App',
     menuTitle: 'Select a Game',
-    verbTrainer: 'German Verb Trainer',
-    caseAdjectiveTrainer: 'German Cases & Adjective Endings',
+    verbTrainer: 'Verb + Preposition',
+    caseAdjectiveTrainer: 'Cases & Adjective Endings',
     settings: 'Settings',
     close: 'Close',
     language: 'Language',
@@ -16,7 +16,7 @@ const translations = {
   fr: {
     appTitle: 'Application de langue',
     menuTitle: 'Choisissez un jeu',
-    verbTrainer: 'Entraîneur de verbes allemands',
+    verbTrainer: 'Verbe + Préposition',
     caseAdjectiveTrainer: 'Cas et terminaisons adjectivales',
     settings: 'Paramètres',
     close: 'Fermer',
@@ -25,7 +25,7 @@ const translations = {
   es: {
     appTitle: 'Aplicación de idiomas',
     menuTitle: 'Selecciona un juego',
-    verbTrainer: 'Entrenador de verbos alemanes',
+    verbTrainer: 'Verbo + Preposición',
     caseAdjectiveTrainer: 'Casos y terminaciones de adjetivos',
     settings: 'Configuración',
     close: 'Cerrar',
@@ -60,17 +60,38 @@ export default function App() {
   // Central menu for game selection
   if (!selectedGame) {
     return (
-      <div style={styles.appContainer}>
-        <h2 style={styles.header}>{t(language, 'appTitle')}</h2>
-        <div style={{ maxWidth: 500, margin: '2rem auto', padding: '2rem', border: '1px solid #ccc', borderRadius: 8, textAlign: 'center' }}>
-          <h3>{t(language, 'menuTitle')}</h3>
-          <button style={styles.guessButton} onClick={() => setSelectedGame('verb')}>{t(language, 'verbTrainer')}</button>
-          <button style={styles.guessButton} onClick={() => setSelectedGame('caseAdjective')}>
+      <div style={{
+        ...styles.appContainer,
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: styles.appContainer.background,
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: 380,
+          padding: '2rem 1rem',
+          borderRadius: 12,
+          boxShadow: styles.cardShadow || '0 2px 16px rgba(0,0,0,0.08)',
+          background: styles.cardBackground || '#fff',
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <h2 style={{ ...styles.header, marginBottom: '1.2rem' }}>{t(language, 'appTitle')}</h2>
+          <h3 style={{ fontWeight: 500, fontSize: '1.15rem', marginBottom: '1.5rem', color: '#1976d2' }}>{t(language, 'menuTitle')}</h3>
+          <button style={{ ...styles.guessButton, width: '100%', fontSize: '1rem', marginBottom: '1rem', padding: '0.9rem 0', borderRadius: 8 }} onClick={() => setSelectedGame('verb')}>
+            {t(language, 'verbTrainer')}
+          </button>
+          <button style={{ ...styles.guessButton, width: '100%', fontSize: '1rem', marginBottom: '1.5rem', padding: '0.9rem 0', borderRadius: 8 }} onClick={() => setSelectedGame('caseAdjective')}>
             {t(language, 'caseAdjectiveTrainer')}
           </button>
-          <div style={{ marginTop: '2rem' }}>
-            <label style={styles.settingsLabel}>{t(language, 'language')}:</label>
-            <select value={language} onChange={handleLanguageChange} style={styles.settingsSelect}>
+          <div style={{ width: '100%', marginTop: 'auto', textAlign: 'left' }}>
+            <label style={{ ...styles.settingsLabel, fontWeight: 500 }}>{t(language, 'language')}:</label>
+            <select value={language} onChange={handleLanguageChange} style={{ ...styles.settingsSelect, width: '100%', marginTop: 8 }}>
               {supportedLanguages.map(lang => (
                 <option key={lang.code} value={lang.code}>{lang.label}</option>
               ))}
