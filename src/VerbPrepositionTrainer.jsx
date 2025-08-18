@@ -4,7 +4,10 @@ import { getRandomIndex, loadProgress, saveProgress, loadAttempts, saveAttempts 
 import { fetchAndParseCSV } from './csvLoader';
 import styles from './AppStyles';
 
-const CSV_FILE = '/Top_50_Verbes_avec_exemples_traduits.csv';
+const CSV_FILES = [
+  { value: '/Top_50_Verbes_avec_exemples_traduits.csv', label: 'Top 50 Verbs' },
+  { value: '/AdjectifAndPreposition.csv', label: 'Test3 (Adjectives + Prepositions)' }
+];
 
 const translations = {
   en: {
@@ -115,6 +118,11 @@ export default function VerbTrainer({ language, onBack }) {
     return saved === '2' ? 2 : 1;
   });
   const [showSettings, setShowSettings] = useState(false);
+  const [csvFile, setCsvFile] = useState(() => {
+    // Try to get from localStorage, fallback to first CSV
+    const stored = window.localStorage.getItem('csvFile');
+    return stored && CSV_FILES.some(f => f.value === stored) ? stored : CSV_FILES[0].value;
+  });
   const inputRef = useRef(null);
 
   function getVerbKey(verbObj) {
@@ -135,8 +143,8 @@ export default function VerbTrainer({ language, onBack }) {
   }
 
   useEffect(() => {
-    fetchAndParseCSV(CSV_FILE, loadProgress(), setVerbs, setCurrentIdx, setCsvError);
-  }, []);
+    fetchAndParseCSV(csvFile, loadProgress(), setVerbs, setCurrentIdx, setCsvError);
+  }, [csvFile]);
 
   useEffect(() => {
     if (!verbs.length) return;
@@ -539,6 +547,21 @@ export default function VerbTrainer({ language, onBack }) {
             </button>
             <h3 style={styles.settingsHeading}>{t(language, "settings")}</h3>
             <div style={{ margin: "1.2rem 0", width: "100%" }}>
+              <div style={{ marginBottom: "1rem", width: "100%" }}>
+                <label style={styles.settingsLabel}>CSV File:</label>
+                <select
+                  value={csvFile}
+                  onChange={e => {
+                    setCsvFile(e.target.value);
+                    window.localStorage.setItem('csvFile', e.target.value);
+                  }}
+                  style={styles.settingsSelect}
+                >
+                  {CSV_FILES.map(f => (
+                    <option key={f.value} value={f.value}>{f.label}</option>
+                  ))}
+                </select>
+              </div>
               <div style={{ marginBottom: "1rem", width: "100%" }}>
                 <label style={styles.settingsLabel}>{t(language, "mode")}:</label>
                 <select value={mode} onChange={e => setMode(e.target.value)} style={styles.settingsSelect}>
