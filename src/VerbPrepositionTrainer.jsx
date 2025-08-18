@@ -123,6 +123,7 @@ export default function VerbTrainer({ language, onBack }) {
     const stored = window.localStorage.getItem('csvFile');
     return stored && CSV_FILES.some(f => f.value === stored) ? stored : CSV_FILES[0].value;
   });
+  const [showLearnedModal, setShowLearnedModal] = useState(false);
   const inputRef = useRef(null);
 
   function getVerbKey(verbObj) {
@@ -236,7 +237,12 @@ export default function VerbTrainer({ language, onBack }) {
     setShowAnswer(true);
     setAttempts((prev) => {
       const prevCount = prev[currentIdx] || 0;
-      const newCount = isCorrect ? prevCount + 1 : prevCount;
+      let newCount;
+      if (isCorrect) {
+        newCount = prevCount + 1;
+      } else {
+        newCount = 0; // Reset counter on error
+      }
       return { ...prev, [currentIdx]: newCount };
     });
     setProgress((p) => {
@@ -529,8 +535,56 @@ export default function VerbTrainer({ language, onBack }) {
         <div style={{ ...styles.progressBarFill, width: `${(progress.learned.length / verbs.length) * 100}%` }}></div>
       </div>
       <div style={styles.scoreText}>
-        <b>{t(language, "score")}:</b> {progress.score} | <b>{t(language, "learned")}:</b> {progress.learned.length}/{verbs.length}
+        <b>{t(language, "score")}</b>: {progress.score} | <b style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setShowLearnedModal(true)}>{t(language, "learned")}</b>: {progress.learned.length}/{verbs.length}
       </div>
+      {showLearnedModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.3)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }} onClick={() => setShowLearnedModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 10, padding: 24, minWidth: 320, maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 4px 24px #0003', position: 'relative' }} onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowLearnedModal(false)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#1976d2' }} aria-label="Close">×</button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 16, marginTop: 2 }}>
+              <h3 style={{ margin: 0 }}>{t(language, "learned")} ({progress.learned.length}/{verbs.length})</h3>
+              <button
+                style={{ background: '#ffcdd2', color: '#b71c1c', border: '1px solid #b71c1c', borderRadius: 6, padding: '6px 14px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.98em', marginLeft: 24 }}
+                title="Reset all progress for this file"
+                onClick={async () => {
+                  if (window.confirm('Are you sure you want to reset all progress for this file?')) {
+                    if (window.confirm('Are you REALLY sure? This cannot be undone!')) {
+                      setProgress({ score: 0, learned: [] });
+                      setAttempts({});
+                      setCurrentIdx(getRandomIndex(verbs.length, []));
+                      setShowLearnedModal(false);
+                    }
+                  }
+                }}
+              >
+                &#x21bb; Reset All
+              </button>
+            </div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1em' }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '4px 8px' }}>#</th>
+                  <th style={{ textAlign: 'left', padding: '4px 8px' }}>{t(language, "preposition")}</th>
+                  <th style={{ textAlign: 'left', padding: '4px 8px' }}>{t(language, "case")}</th>
+                  <th style={{ textAlign: 'left', padding: '4px 8px' }}>Consecutive</th>
+                </tr>
+              </thead>
+              <tbody>
+                {verbs.map((v, idx) => (
+                  <tr key={idx} style={{ background: progress.learned.includes(idx) ? '#c8e6c9' : '#fff' }}>
+                    <td style={{ padding: '4px 8px' }}>{v.Verb}</td>
+                    <td style={{ padding: '4px 8px' }}>{v.Preposition}</td>
+                    <td style={{ padding: '4px 8px' }}>{v.Case}</td>
+                    <td style={{ padding: '4px 8px', textAlign: 'center' }}>{attempts[idx] || 0}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
       {/* Settings modal for mode/level/language */}
       {showSettings && (
         <div style={styles.settingsModalOverlay} onClick={() => setShowSettings(false)}>
