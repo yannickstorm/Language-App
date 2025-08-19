@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { getRandomIndex, loadProgress, saveProgress, loadAttempts, saveAttempts } from './utils';
+import { getRandomIndex, loadProgress, saveProgress } from './utils';
 import { fetchAndParseCSV } from './csvLoader';
 import styles from './AppStyles';
 
 const CSV_FILES = [
-  { value: '/Top_50_Verbes_avec_exemples_traduits.csv', label: 'Top 50 Verbs' },
-  { value: '/AdjectifAndPreposition.csv', label: 'Test3 (Adjectives + Prepositions)' }
+  { value: '/AdjectifAndPreposition.csv', label: '(Names/Adjectives + Prepositions)' },
+  { value: '/Top_50_Verbes_avec_exemples_traduits.csv', label: 'Top 50 Verbs' }
 ];
 
 const translations = {
@@ -105,8 +105,26 @@ export default function VerbTrainer({ language, onBack }) {
   const [currentIdx, setCurrentIdx] = useState(null);
   const [guess, setGuess] = useState({ prep: '', case: '' });
   const [showAnswer, setShowAnswer] = useState(false);
-  const [progress, setProgress] = useState(loadProgress());
-  const [attempts, setAttempts] = useState(loadAttempts());
+  const [csvFile, setCsvFile] = useState(() => {
+    // Try to get from localStorage, fallback to first CSV
+    const stored = window.localStorage.getItem('csvFile');
+    return stored && CSV_FILES.some(f => f.value === stored) ? stored : CSV_FILES[0].value;
+  });
+  // --- Single progress object: { score, learned, attempts } ---
+  function getProgressKey(csvFile) {
+    return `progress_${csvFile}`;
+  }
+  function loadProgressForFile(csvFile) {
+    try {
+      return JSON.parse(localStorage.getItem(getProgressKey(csvFile))) || { score: 0, learned: [], attempts: {} };
+    } catch {
+      return { score: 0, learned: [], attempts: {} };
+    }
+  }
+  function saveProgressForFile(csvFile, progress) {
+    localStorage.setItem(getProgressKey(csvFile), JSON.stringify(progress));
+  }
+  const [progress, setProgress] = useState(() => loadProgressForFile(csvFile));
   const [csvError, setCsvError] = useState(null);
   const [mode, setMode] = useState(() => {
     const savedMode = localStorage.getItem('mode');
@@ -118,13 +136,10 @@ export default function VerbTrainer({ language, onBack }) {
     return saved === '2' ? 2 : 1;
   });
   const [showSettings, setShowSettings] = useState(false);
-  const [csvFile, setCsvFile] = useState(() => {
-    // Try to get from localStorage, fallback to first CSV
-    const stored = window.localStorage.getItem('csvFile');
-    return stored && CSV_FILES.some(f => f.value === stored) ? stored : CSV_FILES[0].value;
-  });
   const [showLearnedModal, setShowLearnedModal] = useState(false);
   const inputRef = useRef(null);
+  // --- restoration flag ---
+  const [restored, setRestored] = useState(false);
 
   function getVerbKey(verbObj) {
     return `${verbObj['Verb']}|${verbObj['Preposition']}|${verbObj['Exemple']}`;
@@ -143,55 +158,61 @@ export default function VerbTrainer({ language, onBack }) {
     return choices.sort(() => Math.random() - 0.5);
   }
 
+  // --- Fetch verbs and restore progress when csvFile changes ---
   useEffect(() => {
-    fetchAndParseCSV(csvFile, loadProgress(), setVerbs, setCurrentIdx, setCsvError);
+    let isMounted = true;
+    setRestored(false); // Always reset restoration flag
+    setVerbs([]); // Clear verbs while loading
+    setCurrentIdx(null);
+    setCsvError(null);
+    fetchAndParseCSV(csvFile, loadProgressForFile(csvFile), (loadedVerbs) => {
+      if (!isMounted) return;
+      // Restore progress for these verbs
+      const savedProgress = loadProgressForFile(csvFile);
+      const savedAttempts = savedProgress.attempts || {};
+      const savedLearnedKeys = Array.isArray(savedProgress.learned) ? savedProgress.learned : [];
+      const newLearned = [];
+      const newAttempts = {};
+      loadedVerbs.forEach((v) => {
+        const key = getVerbKey(v);
+        newAttempts[key] = savedAttempts[key] !== undefined ? savedAttempts[key] : 0;
+        const isLearnedByKey = savedLearnedKeys.includes(key);
+        const isLearnedByAttempts = newAttempts[key] >= 3;
+        if (isLearnedByKey || isLearnedByAttempts) {
+          newLearned.push(key);
+        }
+      });
+      setVerbs(loadedVerbs);
+      setProgress({
+        score: newLearned.length,
+        learned: newLearned,
+        attempts: newAttempts
+      });
+      // Set currentIdx to a random unlearned verb for the new file
+      const unlearnedIdxs = loadedVerbs
+        .map((v, idx) => ({ idx, key: getVerbKey(v) }))
+        .filter(({ key }) => !newLearned.includes(key))
+        .map(({ idx }) => idx);
+      setCurrentIdx(
+        unlearnedIdxs.length > 0 ?
+          unlearnedIdxs[Math.floor(Math.random() * unlearnedIdxs.length)] :
+          0
+      );
+      setRestored(true);
+    }, setCurrentIdx, setCsvError);
+    return () => { isMounted = false; };
   }, [csvFile]);
 
+  // --- Save progress immediately after any change, but only after restoration ---
   useEffect(() => {
-    if (!verbs.length) return;
-    const savedProgress = loadProgress();
-    const savedAttempts = loadAttempts();
-    const newLearned = [];
-    const newAttempts = {};
-    verbs.forEach((v, idx) => {
-      const key = getVerbKey(v);
-      if (savedAttempts[key] !== undefined) {
-        newAttempts[idx] = savedAttempts[key];
-      }
-      if (savedProgress.learned && Array.isArray(savedProgress.learned)) {
-        const learnedKey = savedProgress.learned.find(lk => lk === key);
-        if (learnedKey) {
-          newLearned.push(idx);
-        }
-      }
-    });
-    setProgress({ score: newLearned.length, learned: newLearned });
-    setAttempts(newAttempts);
-  }, [verbs]);
-
-  useEffect(() => {
-    if (!verbs.length) return;
+    if (!restored || !verbs.length) return;
     const progressToSave = {
-      score: progress.score,
-      learned: progress.learned
-        .map(idx => verbs[idx] ? getVerbKey(verbs[idx]) : null)
-        .filter(Boolean)
+      score: progress.learned.length,
+      learned: progress.learned, // already array of verb keys
+      attempts: progress.attempts || {}
     };
-    saveProgress(progressToSave);
-    const attemptsToSave = {};
-    Object.entries(attempts).forEach(([idx, val]) => {
-      if (verbs[idx]) {
-        attemptsToSave[getVerbKey(verbs[idx])] = val;
-      }
-    });
-    saveAttempts(attemptsToSave);
-  }, [progress, attempts, verbs]);
-
-  useEffect(() => {
-    if (["prep", "case", "both"].includes(mode)) {
-      localStorage.setItem("mode", mode);
-    }
-  }, [mode]);
+    saveProgressForFile(csvFile, progressToSave);
+  }, [progress, verbs, csvFile, restored]);
 
   useEffect(() => {
     if (verbs.length && currentIdx !== null && mode !== "case" && level === 1) {
@@ -225,6 +246,7 @@ export default function VerbTrainer({ language, onBack }) {
 
   function handleGuess() {
     const current = verbs[currentIdx];
+    const verbKey = getVerbKey(current);
     const correctPrep = current["Preposition"]?.trim().toLowerCase();
     const correctCase = current["Case"]?.trim().toLowerCase();
     let isCorrect = true;
@@ -235,33 +257,39 @@ export default function VerbTrainer({ language, onBack }) {
       isCorrect = isCorrect && (guess.case.trim().toLowerCase() === correctCase);
     }
     setShowAnswer(true);
-    setAttempts((prev) => {
-      const prevCount = prev[currentIdx] || 0;
-      let newCount;
-      if (isCorrect) {
-        newCount = prevCount + 1;
-      } else {
-        newCount = 0; // Reset counter on error
-      }
-      return { ...prev, [currentIdx]: newCount };
-    });
-    setProgress((p) => {
-      const alreadyLearned = p.learned.includes(currentIdx);
-      let newScore = p.score;
-      let newLearned = p.learned;
-      const nextAttempts = (attempts[currentIdx] || 0) + (isCorrect ? 1 : 0);
+    setProgress((prev) => {
+      const prevCount = prev.attempts[verbKey] || 0;
+      let newCount = isCorrect ? prevCount + 1 : 0;
+      const alreadyLearned = prev.learned.includes(verbKey);
+      let newScore = prev.score;
+      let newLearned = prev.learned;
+      const nextAttempts = newCount;
       if (isCorrect && nextAttempts >= 3 && !alreadyLearned) {
-        newScore = p.score + 1;
-        newLearned = [...p.learned, currentIdx];
+        newScore = prev.score + 1;
+        newLearned = [...prev.learned, verbKey];
       }
-      return { ...p, score: newScore, learned: newLearned };
+      return {
+        ...prev,
+        score: newScore,
+        learned: newLearned,
+        attempts: { ...prev.attempts, [verbKey]: newCount }
+      };
     });
   }
 
   function nextVerb() {
     setShowAnswer(false);
     setGuess({ prep: '', case: '' });
-    setCurrentIdx(getRandomIndex(verbs.length, progress.learned));
+    // Pick a random verb whose key is not in progress.learned
+    const unlearnedIdxs = verbs
+      .map((v, idx) => ({ idx, key: getVerbKey(v) }))
+      .filter(({ key }) => !progress.learned.includes(key))
+      .map(({ idx }) => idx);
+    setCurrentIdx(
+      unlearnedIdxs.length > 0 ?
+        unlearnedIdxs[Math.floor(Math.random() * unlearnedIdxs.length)] :
+        0
+    );
   }
 
   function giveUp() {
@@ -332,9 +360,8 @@ export default function VerbTrainer({ language, onBack }) {
           <b>{t(language, "score")}</b>: {progress.score} / {verbs.length}
         </div>
         <button onClick={() => {
-          setProgress({ score: 0, learned: [] });
-          setAttempts({});
-          setCurrentIdx(getRandomIndex(verbs.length, []));
+          setProgress({ score: 0, learned: [], attempts: {} });
+          setCurrentIdx(verbs.length > 0 ? Math.floor(Math.random() * verbs.length) : 0);
         }}>
           {t(language, "restart")}
         </button>
@@ -551,8 +578,7 @@ export default function VerbTrainer({ language, onBack }) {
                 onClick={async () => {
                   if (window.confirm('Are you sure you want to reset all progress for this file?')) {
                     if (window.confirm('Are you REALLY sure? This cannot be undone!')) {
-                      setProgress({ score: 0, learned: [] });
-                      setAttempts({});
+                      setProgress({ score: 0, learned: [], attempts: {} });
                       setCurrentIdx(getRandomIndex(verbs.length, []));
                       setShowLearnedModal(false);
                     }
@@ -572,14 +598,18 @@ export default function VerbTrainer({ language, onBack }) {
                 </tr>
               </thead>
               <tbody>
-                {verbs.map((v, idx) => (
-                  <tr key={idx} style={{ background: progress.learned.includes(idx) ? '#c8e6c9' : '#fff' }}>
-                    <td style={{ padding: '4px 8px' }}>{v.Verb}</td>
-                    <td style={{ padding: '4px 8px' }}>{v.Preposition}</td>
-                    <td style={{ padding: '4px 8px' }}>{v.Case}</td>
-                    <td style={{ padding: '4px 8px', textAlign: 'center' }}>{attempts[idx] || 0}</td>
-                  </tr>
-                ))}
+                {verbs.map((v, idx) => {
+                  const verbKey = getVerbKey(v);
+                  const isLearned = progress.learned.includes(verbKey) || (progress.attempts[verbKey] >= 3);
+                  return (
+                    <tr key={idx} style={{ background: isLearned ? '#c8e6c9' : '#fff' }}>
+                      <td style={{ padding: '4px 8px' }}>{v.Verb}</td>
+                      <td style={{ padding: '4px 8px' }}>{v.Preposition}</td>
+                      <td style={{ padding: '4px 8px' }}>{v.Case}</td>
+                      <td style={{ padding: '4px 8px', textAlign: 'center' }}>{progress.attempts[verbKey] !== undefined ? progress.attempts[verbKey] : 0}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
